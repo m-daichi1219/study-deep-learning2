@@ -1,6 +1,10 @@
 import numpy as np
 from ch03 import layers
 from ch03 import functions
+from ch03.simple_cbow import SimpleCBOW
+from common.trainer import Trainer
+from common.optimizer import Adam
+
 
 print("▼one-hot表現の単語を全結合層によって変換")
 c = np.array([[1, 0, 0, 0, 0, 0, 0]])   # 入力
@@ -58,3 +62,28 @@ print("▼ターゲット（one-hot)")
 print(target)   # 形状:(6, 7)
 print("▼コンテキスト（one-hot)")
 print(contexts) # 形状:(6, 2, 7)
+
+# 3.4.1 学習コードの実装
+windows_size = 1
+hidden_size = 5
+batch_size = 3
+max_epoch = 1000
+
+text = 'You say goodbye and I say hello.'
+corpus, word_to_id, id_to_word = functions.preprocess(text)
+vocab_size = len(word_to_id)
+contexts, target = functions.create_contexts_target(corpus, windows_size)
+target = functions.convert_one_hot(target, vocab_size)
+contexts = functions.convert_one_hot(contexts, vocab_size)
+
+model = SimpleCBOW(vocab_size, hidden_size)
+optimizer = Adam()
+trainer = Trainer(model, optimizer)
+
+trainer.fit(contexts, target, max_epoch, batch_size)
+trainer.plot()
+
+# 重みを確認
+word_vecs = model.word_vecs
+for word_id, word in id_to_word.items():
+    print(word, word_vecs[word_id])
