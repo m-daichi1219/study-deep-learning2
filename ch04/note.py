@@ -33,5 +33,3 @@ print(np.random.choice(words, size=5, replace=False))
 print("▼確率分布に従ってサンプリング")
 p = [0.5, 0.1, 0.05, 0.2, 0.05, 0.1]
 print(np.random.choice(words, p=p))
-
-
