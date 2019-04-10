@@ -1,10 +1,10 @@
-# import sys
-# sys.path.append('..')
+import sys
+sys.path.append('..')
 import matplotlib.pyplot as plt
 import numpy as np
 from common.optimizer import SGD
 from dataset import ptb
-from .simple_rnnlm import SimpleRnnlm
+from ch05.simple_rnnlm import *
 
 
 # ハイパーパラメータの設定
@@ -64,3 +64,13 @@ for epoch in range(max_epoch):
     print('| epoch %d | perplexity %.2f' % (epoch+1, ppl))
     ppl_list.append(float(ppl))
     total_loss, loss_count = 0, 0
+
+# corpus size: 1000, vocabulary size: 418
+# | epoch 1 | perplexity 406.84
+# | epoch 2 | perplexity 300.17
+# | epoch 3 | perplexity 231.96
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# | epoch 98 | perplexity 5.04
+# | epoch 99 | perplexity 4.87
+# | epoch 100 | perplexity 4.87
