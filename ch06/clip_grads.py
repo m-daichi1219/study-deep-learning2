@@ -8,6 +8,7 @@ dW2 = np.random.randn(3, 3) * 10
 grads = [dW1, dW2]
 max_norm = 5.0
 
+
 def clip_grads(grads, max_norm):
     total_norm = 0
     for grad in grads:
