@@ -38,7 +38,7 @@ for epoch in range(max_epoch):
     for i in range(len(x_test)):
         question, correct = x_train[[i]], t_test[[i]]
         verbose = i < 10
-        correct_num += eval_seq2seq(model, question, correct, id_to_char, verbose)
+        correct_num += eval_seq2seq(model, question, correct, id_to_char, verbose, True)
 
     acc = float(correct_num) / len(x_test)
     acc_list.append(acc)
@@ -65,3 +65,18 @@ for epoch in range(max_epoch):
 # | epoch 5 |  iter 1 / 351 | time 0[s] | loss 1.01
 # | epoch 5 |  iter 21 / 351 | time 0[s] | loss 1.01
 # | epoch 5 |  iter 41 / 351 | time 1[s] | loss 1.00
+
+# 改良②:Peekyを実装
+# val acc 0.020%
+# | epoch 25 |  iter 1 / 351 | time 0[s] | loss 0.02
+# | epoch 25 |  iter 21 / 351 | time 0[s] | loss 0.01
+# | epoch 25 |  iter 41 / 351 | time 1[s] | loss 0.01
+# →まったく学習が進んでいない、実装が間違えてる。。
+
+# 2019/04/22
+# eval_seq2seqの引数に改良①（リバース）の引数が漏れてた
+# そのため、学習は進んでいたが、評価時に正しいデータとマッチングできていなかった
+# val acc 96.960%
+# | epoch 25 |  iter 1 / 351 | time 0[s] | loss 0.02
+# | epoch 25 |  iter 21 / 351 | time 0[s] | loss 0.01
+# | epoch 25 |  iter 41 / 351 | time 1[s] | loss 0.01

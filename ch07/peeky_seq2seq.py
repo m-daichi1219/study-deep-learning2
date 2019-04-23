@@ -35,6 +35,9 @@ class PeekyDecoder:
         hs = np.repeat(h, T, axis=0).reshape(N, T, H)
         out = np.concatenate((hs, out), axis=2)
 
+        out = self.lstm.forward(out)
+        out = np.concatenate((hs, out), axis=2)
+
         score = self.affine.forward(out)
         self.cache = H
         return score
@@ -45,10 +48,10 @@ class PeekyDecoder:
         dout = self.affine.backward(dscore)
         dout, dhs0 = dout[:, :, H:], dout[:, :, :H]
         dout = self.lstm.backward(dout)
-        dembed, hds1 = dout[:, :, :H], dout[:, :, :H]
+        dembed, dhs1 = dout[:, :, H:], dout[:, :, :H]
         self.embed.backward(dembed)
 
-        dhs = dhs0 + hds1
+        dhs = dhs0 + dhs1
         dh = self.lstm.dh + np.sum(dhs, axis=1)
         return dh
 
@@ -60,7 +63,7 @@ class PeekyDecoder:
         H = h.shape[1]
         peeky_h = h.reshape(1, 1, H)
         for _ in range(sample_size):
-            x = np.array([char_id].reshape((1, 1)))
+            x = np.array([char_id]).reshape((1, 1))
             out = self.embed.forward(x)
 
             out = np.concatenate((peeky_h, out), axis=2)
